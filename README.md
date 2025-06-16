@@ -4,20 +4,33 @@ A mobile application that helps users determine the optimal time to go to sleep 
 
 ## Features
 
-- **Wake-up Time Selection**: Choose your desired wake-up time
-- **Sleep Duration Customization**: Select how much sleep you need (6-10 hours)
-- **Wind-down Period**: Set a buffer time before sleep (15-60 minutes)
-- **Dynamic Sleep Suggestions**: Get personalized bedtime recommendations
-- **Preference Saving**: Your settings are remembered between app sessions
+- **Wake-up Time Selection**: Choose your desired wake-up time with an intuitive time picker
+- **Sleep Duration Customization**: Select how much sleep you need (6-10 hours) via an interactive slider
+- **Wind-down Period**: Set a buffer time before sleep (15/30/45/60 minutes) to help you prepare for rest
+- **Dynamic Sleep Suggestions**: Get personalized bedtime recommendations based on your preferences
+- **Preference Saving**: Your settings are remembered between app sessions using AsyncStorage
+- **Multiple Screens**: Navigate between Home, Sleep Calculator, History, and Settings screens
+- **Theme Support**: Interface adapts to light/dark mode preferences
 
 ## Technical Stack
 
-- **Framework**: React Native
-- **Target Platform**: Android (initially)
+- **Framework**: React Native with TypeScript
+- **Target Platforms**: iOS and Android
+- **Navigation**: React Navigation with bottom tabs and stack navigator
 - **UI Components**:
-  - `@react-native-community/datetimepicker` – Wake time input
-  - `@react-native-community/slider` – Sleep duration
-- **Storage**: `@react-native-async-storage/async-storage` for settings
+  - `@react-native-community/datetimepicker` – Wake time selection
+  - `@react-native-community/slider` – Sleep duration adjustment
+  - `react-native-vector-icons` – Interface icons
+- **Storage**: `@react-native-async-storage/async-storage` for persisting user preferences and sleep history
+
+## Project Structure
+
+- **src/components/**: Reusable UI components (TimePicker, WindDownSelector, ResultCard)
+- **src/screens/**: Main application screens (Home, SleepCalculator, History, Settings)
+- **src/utils/**: Utility functions for sleep calculations and data storage
+- **src/styles/**: Theme definitions and styling constants
+- **src/types/**: TypeScript type definitions
+- **src/navigation/**: Navigation configuration
 
 # Getting Started
 
