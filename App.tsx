@@ -12,12 +12,16 @@ import React, { useEffect, useState } from 'react';
 import { useColorScheme } from 'react-native';
 import { loadAppSettings } from './src/utils/storage';
 import AppNavigator from './src/navigation/AppNavigator';
+import { registerIcons } from './src/utils/iconSetup';
 
 function App() {
   const colorScheme = useColorScheme();
   const [isDarkMode, setIsDarkMode] = useState<boolean>(colorScheme === 'dark');
   
   useEffect(() => {
+    // Initialize icons
+    registerIcons();
+    
     // Load saved theme preference
     const loadTheme = async () => {
       const settings = await loadAppSettings();

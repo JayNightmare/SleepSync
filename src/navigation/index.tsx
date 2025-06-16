@@ -3,7 +3,7 @@ import React from 'react';
 import { StatusBar, useColorScheme } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 import { RootStackParamList } from '../types';
 import { colors } from '../styles/theme';
@@ -18,9 +18,9 @@ const Tab = createBottomTabNavigator<RootStackParamList>();
 // Define mapping of route names to icons (outside of component)
 const routeIcons: Record<string, { active: string; inactive: string }> = {
   Home: { active: 'home', inactive: 'home-outline' },
-  SleepCalculator: { active: 'calculator', inactive: 'calculator-variant' },
-  History: { active: 'history', inactive: 'history' },
-  Settings: { active: 'cog', inactive: 'cog-outline' },
+  SleepCalculator: { active: 'calculator', inactive: 'calculator-outline' },
+  History: { active: 'time', inactive: 'time-outline' },
+  Settings: { active: 'settings', inactive: 'settings-outline' },
 };
 
 interface NavigationProps {
@@ -65,14 +65,14 @@ const Navigation: React.FC<NavigationProps> = ({ theme }) => {
             if (route.name === 'Home') {
               iconName = focused ? 'home' : 'home-outline';
             } else if (route.name === 'SleepCalculator') {
-              iconName = focused ? 'calculator' : 'calculator-variant';
+              iconName = focused ? 'calculator' : 'calculator-outline';
             } else if (route.name === 'History') {
-              iconName = focused ? 'history' : 'history';
+              iconName = focused ? 'time' : 'time-outline';
             } else if (route.name === 'Settings') {
-              iconName = focused ? 'cog' : 'cog-outline';
+              iconName = focused ? 'settings' : 'settings-outline';
             }
 
-            return <Icon name={iconName || 'help'} size={size} color={color} />;
+            return <Ionicons name={iconName || 'help-circle'} size={size} color={color} />;
           },
         })}
       >

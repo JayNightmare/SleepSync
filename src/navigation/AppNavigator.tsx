@@ -1,8 +1,7 @@
 import React from 'react';
-import { StyleSheet } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 import { RootStackParamList } from '../types';
 import { colors } from '../styles/theme';
@@ -25,19 +24,31 @@ const TabBarIcon = (props: {
   if (route === 'Home') {
     iconName = focused ? 'home' : 'home-outline';
   } else if (route === 'SleepCalculator') {
-    iconName = focused ? 'calculator' : 'calculator-variant';
+    iconName = focused ? 'calculator' : 'calculator-outline';
   } else if (route === 'History') {
-    iconName = focused ? 'history' : 'history';
+    iconName = focused ? 'time' : 'time-outline';
   } else if (route === 'Settings') {
-    iconName = focused ? 'cog' : 'cog-outline';
+    iconName = focused ? 'settings' : 'settings-outline';
   }
 
-  return <Icon name={iconName} size={size} color={color} />;
+  return <Ionicons name={iconName} size={size} color={color} />;
 };
 
 type NavigationProps = {
   isDarkMode: boolean;
 };
+
+const tabBarIcon = (
+  route: keyof RootStackParamList,
+  _theme: typeof colors.light | typeof colors.dark
+) => ({ focused, color, size }: { focused: boolean; color: string; size: number }) => (
+  <TabBarIcon
+    route={route}
+    focused={focused}
+    color={color}
+    size={size}
+  />
+);
 
 const AppNavigator: React.FC<NavigationProps> = ({ isDarkMode }) => {
   const theme = isDarkMode ? colors.dark : colors.light;
@@ -53,14 +64,7 @@ const AppNavigator: React.FC<NavigationProps> = ({ isDarkMode }) => {
             backgroundColor: theme.card,
             borderTopColor: theme.border,
           },
-          tabBarIcon: ({ focused, color, size }) => (
-            <TabBarIcon
-              route={route.name as keyof RootStackParamList}
-              focused={focused}
-              color={color}
-              size={size}
-            />
-          ),
+          tabBarIcon: tabBarIcon(route.name as keyof RootStackParamList, theme),
           headerStyle: {
             backgroundColor: theme.card,
           },

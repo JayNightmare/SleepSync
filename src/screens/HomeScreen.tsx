@@ -7,10 +7,10 @@ import {
   TouchableOpacity,
   useColorScheme,
   StyleSheet,
-  Alert,
+  // Alert,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import Ionicons from '@react-native-vector-icons/ionicons';
 import { loadAppSettings, loadSleepHistory, loadSleepSettings } from '../utils/storage';
 import { calculateSleepTimes } from '../utils/sleepCalculator';
 import { colors, getGlobalStyles } from '../styles/theme';
@@ -90,7 +90,7 @@ const HomeScreen: React.FC = () => {
       <ScrollView contentContainerStyle={localStyles.scrollContent}>
         <View style={localStyles.welcomeContainer}>
           <View style={[localStyles.logoContainer]}>
-            <Icon name="sleep" size={40} color={theme.primary} />
+            <Ionicons name="moon" size={40} color={theme.primary} />
             <Text style={[styles.logo, localStyles.logo]}>SleepSync</Text>
           </View>
           <Text style={[styles.text, { color: theme.subText }]}>
@@ -106,7 +106,7 @@ const HomeScreen: React.FC = () => {
           >
             <View style={localStyles.cardHeader}>
               <Text style={styles.header}>Tonight's Sleep Plan</Text>
-              <Icon name="chevron-right" size={24} color={theme.primary} />
+              <Ionicons name="chevron-forward" size={24} color={theme.primary} />
             </View>
 
             <View style={localStyles.timesRow}>
@@ -140,7 +140,7 @@ const HomeScreen: React.FC = () => {
             style={[styles.card, localStyles.actionCard]}
             onPress={goToCalculator}
           >
-            <Icon name="calculator" size={36} color={theme.primary} />
+            <Ionicons name="calculator" size={36} color={theme.primary} />
             <Text style={[styles.subHeader, { marginTop: 12 }]}>Calculate Sleep</Text>
             <Text style={[styles.caption, { textAlign: 'center' }]}>
               Find your optimal bedtime based on when you want to wake up
@@ -151,7 +151,7 @@ const HomeScreen: React.FC = () => {
             style={[styles.card, localStyles.actionCard]}
             onPress={goToHistory}
           >
-            <Icon name="history" size={36} color={theme.primary} />
+            <Ionicons name="time" size={36} color={theme.primary} />
             <Text style={[styles.subHeader, { marginTop: 12 }]}>Sleep History</Text>
             <Text style={[styles.caption, { textAlign: 'center' }]}>
               View your saved sleep schedules
@@ -162,7 +162,7 @@ const HomeScreen: React.FC = () => {
             style={[styles.card, localStyles.actionCard]}
             onPress={goToSettings}
           >
-            <Icon name="cog" size={36} color={theme.primary} />
+            <Ionicons name="settings" size={36} color={theme.primary} />
             <Text style={[styles.subHeader, { marginTop: 12 }]}>Settings</Text>
             <Text style={[styles.caption, { textAlign: 'center' }]}>
               Customize your app preferences

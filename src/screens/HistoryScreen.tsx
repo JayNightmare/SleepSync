@@ -12,7 +12,7 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import { deleteHistoryEntry, loadAppSettings, loadSleepHistory } from '../utils/storage';
 import { SleepHistoryEntry } from '../types';
 import { colors, getGlobalStyles } from '../styles/theme';
@@ -134,7 +134,7 @@ const HistoryScreen: React.FC = () => {
           onPress={onRefresh}
           disabled={isLoading || refreshing}
         >
-          <Icon 
+          <Ionicons 
             name="refresh" 
             size={24} 
             color={theme.primary}
@@ -163,7 +163,7 @@ const HistoryScreen: React.FC = () => {
         
         {history.length === 0 && !isLoading && (
           <View style={[styles.card, localStyles.emptyState]}>
-            <Icon name="sleep" size={48} color={theme.subText} />
+            <Ionicons name="moon" size={48} color={theme.subText} />
             <Text style={[styles.subHeader, localStyles.emptyText]}>No history yet</Text>
             <Text style={[styles.caption, localStyles.centerText]}>
               Your saved sleep plans will appear here
@@ -207,7 +207,7 @@ const HistoryScreen: React.FC = () => {
               style={localStyles.deleteButton}
               onPress={() => confirmDelete(entry)}
             >
-              <Icon name="delete-outline" size={20} color={theme.danger} />
+              <Ionicons name="trash-outline" size={20} color={theme.danger} />
               <Text style={localStyles.deleteText}>Delete</Text>
             </TouchableOpacity>
           </View>

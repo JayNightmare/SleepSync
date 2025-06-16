@@ -10,7 +10,7 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import Slider from '@react-native-community/slider';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import { AppSettings, WindDownOption } from '../types';
 import { colors, getGlobalStyles } from '../styles/theme';
 import { loadAppSettings, saveAppSettings } from '../utils/storage';
@@ -98,8 +98,8 @@ const SettingsScreen: React.FC = () => {
                 ]}
                 onPress={() => updateSettings({ theme: 'light' })}
               >
-                <Icon
-                  name={settings.theme === 'light' ? 'check-circle' : 'circle-outline'}
+                <Ionicons
+                  name={settings.theme === 'light' ? 'checkmark-circle' : 'ellipse-outline'}
                   size={16}
                   color={theme.primary}
                 />
@@ -114,8 +114,8 @@ const SettingsScreen: React.FC = () => {
                 ]}
                 onPress={() => updateSettings({ theme: 'dark' })}
               >
-                <Icon
-                  name={settings.theme === 'dark' ? 'check-circle' : 'circle-outline'}
+                <Ionicons
+                  name={settings.theme === 'dark' ? 'checkmark-circle' : 'ellipse-outline'}
                   size={16}
                   color={theme.primary}
                 />
@@ -130,8 +130,8 @@ const SettingsScreen: React.FC = () => {
                 ]}
                 onPress={() => updateSettings({ theme: 'system' })}
               >
-                <Icon
-                  name={settings.theme === 'system' ? 'check-circle' : 'circle-outline'}
+                <Ionicons
+                  name={settings.theme === 'system' ? 'checkmark-circle' : 'ellipse-outline'}
                   size={16}
                   color={theme.primary}
                 />
