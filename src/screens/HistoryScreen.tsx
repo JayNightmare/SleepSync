@@ -17,6 +17,7 @@ import { deleteHistoryEntry, loadAppSettings, loadSleepHistory } from '../utils/
 import { SleepHistoryEntry } from '../types';
 import { colors, getGlobalStyles } from '../styles/theme';
 import { formatTime } from '../utils/sleepCalculator';
+import { requestHealthPermissions, fetchSleepSamples } from '../utils/appleHealth';
 
 const HistoryScreen: React.FC = () => {
   const colorScheme = useColorScheme();
@@ -38,10 +39,23 @@ const HistoryScreen: React.FC = () => {
     setIsLoading(true);
     const settings = await loadAppSettings();
     setAppSettings(settings);
-    
+
     const savedHistory = await loadSleepHistory();
     if (savedHistory) {
       setHistory(savedHistory);
+    }
+
+    if (settings?.enableWatchTracking) {
+      try {
+        const granted = await requestHealthPermissions();
+        if (granted) {
+          const start = new Date();
+          start.setDate(start.getDate() - 7);
+          await fetchSleepSamples(start);
+        }
+      } catch (err) {
+        console.error('Failed to load watch data:', err);
+      }
     }
     setIsLoading(false);
     setRefreshing(false);

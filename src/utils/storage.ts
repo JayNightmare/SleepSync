@@ -122,6 +122,8 @@ export const loadSleepHistory = async (): Promise<
                 ...entry,
                 wakeUpTime: new Date(entry.wakeUpTime),
                 createdAt: new Date(entry.createdAt),
+                ...(entry.watchStart ? { watchStart: new Date(entry.watchStart) } : {}),
+                ...(entry.watchEnd ? { watchEnd: new Date(entry.watchEnd) } : {}),
             }));
         }
         return [];
@@ -202,6 +204,7 @@ export const loadAppSettings = async (): Promise<AppSettings | null> => {
             optimizeSleepCycles: false,
             defaultSleepDuration: 8,
             defaultWindDownPeriod: 30,
+            enableWatchTracking: false,
         };
     } catch (error) {
         console.error('Error loading app settings:', error);

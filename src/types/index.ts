@@ -10,6 +10,10 @@ export interface SleepHistoryEntry extends SleepSettings {
   id: string;
   createdAt: Date;
   title?: string;
+  /** Optional data imported from Apple Watch */
+  watchStart?: Date;
+  watchEnd?: Date;
+  watchQuality?: number;
 }
 
 export type ThemeMode = 'light' | 'dark';
@@ -28,4 +32,6 @@ export interface AppSettings {
   optimizeSleepCycles: boolean;
   defaultSleepDuration: number;
   defaultWindDownPeriod: WindDownOption;
+  /** When enabled, sleep data is imported from Apple Watch */
+  enableWatchTracking: boolean;
 }

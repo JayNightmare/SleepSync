@@ -24,6 +24,7 @@ const SettingsScreen: React.FC = () => {
     optimizeSleepCycles: false,
     defaultSleepDuration: 8,
     defaultWindDownPeriod: 30,
+    enableWatchTracking: false,
   });
 
   // Use app settings for dark mode if available, otherwise use system
@@ -82,6 +83,16 @@ const SettingsScreen: React.FC = () => {
             <Switch
               value={settings.use24HourFormat}
               onValueChange={(value) => updateSettings({ use24HourFormat: value })}
+              trackColor={{ false: theme.border, true: theme.primary }}
+              thumbColor={theme.card}
+            />
+          </View>
+
+          <View style={localStyles.settingRow}>
+            <Text style={styles.text}>Enable Watch Tracking</Text>
+            <Switch
+              value={settings.enableWatchTracking}
+              onValueChange={(value) => updateSettings({ enableWatchTracking: value })}
               trackColor={{ false: theme.border, true: theme.primary }}
               thumbColor={theme.card}
             />
