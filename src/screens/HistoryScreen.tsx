@@ -18,6 +18,7 @@ import { SleepHistoryEntry } from '../types';
 import { colors, getGlobalStyles } from '../styles/theme';
 import { formatTime } from '../utils/sleepCalculator';
 import { requestHealthPermissions, fetchSleepSamples } from '../utils/appleHealth';
+import SleepReviewScreen from './SleepReviewScreen';
 
 const HistoryScreen: React.FC = () => {
   const colorScheme = useColorScheme();
@@ -25,6 +26,7 @@ const HistoryScreen: React.FC = () => {
   const [history, setHistory] = useState<SleepHistoryEntry[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
+  const [reviewEntry, setReviewEntry] = useState<SleepHistoryEntry | null>(null);
   
   // Use app settings for dark mode if available, otherwise use system
   const isDarkMode = appSettings?.theme === 'system'
@@ -131,6 +133,15 @@ const HistoryScreen: React.FC = () => {
     fetchHistory(); // Refresh the list
   };
 
+  const openReview = (entry: SleepHistoryEntry) => {
+    setReviewEntry(entry);
+  };
+
+  const closeReview = () => {
+    setReviewEntry(null);
+    fetchHistory();
+  };
+
   // Get appropriate text for when the entry was created
   const getTimeAgoText = (date: Date) => {
     const now = new Date();
@@ -225,17 +236,38 @@ const HistoryScreen: React.FC = () => {
                 <Text style={styles.text}>{entry.windDownPeriod} min</Text>
               </View>
             </View>
-            
-            <TouchableOpacity 
-              style={localStyles.deleteButton}
-              onPress={() => confirmDelete(entry)}
-            >
-              <Ionicons name="trash-outline" size={20} color={theme.danger} />
-              <Text style={localStyles.deleteText}>Delete</Text>
-            </TouchableOpacity>
+
+            <View style={localStyles.reviewRow}>
+              <Text style={styles.text}>Quality: {entry.quality ?? '-'}</Text>
+              <Text style={styles.text}>Technique: {entry.technique || '-'}</Text>
+            </View>
+
+            <View style={localStyles.actionsRow}>
+              <TouchableOpacity
+                style={localStyles.editButton}
+                onPress={() => openReview(entry)}
+              >
+                <Ionicons name="pencil" size={20} color={theme.primary} />
+                <Text style={localStyles.editText}>Edit</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={localStyles.deleteButton}
+                onPress={() => confirmDelete(entry)}
+              >
+                <Ionicons name="trash-outline" size={20} color={theme.danger} />
+                <Text style={localStyles.deleteText}>Delete</Text>
+              </TouchableOpacity>
+            </View>
           </View>
         ))}
       </ScrollView>
+      <SleepReviewScreen
+        visible={reviewEntry !== null}
+        entry={reviewEntry}
+        onClose={closeReview}
+        isDarkMode={isDarkMode}
+      />
     </SafeAreaView>
   );
 };
@@ -275,6 +307,24 @@ const localStyles = StyleSheet.create({
     alignItems: 'center',
     alignSelf: 'flex-end',
     padding: 8,
+  },
+  editButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 8,
+  },
+  actionsRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  editText: {
+    marginLeft: 4,
+    color: '#3949AB',
+  },
+  reviewRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 8,
   },
   emptyState: {
     alignItems: 'center',

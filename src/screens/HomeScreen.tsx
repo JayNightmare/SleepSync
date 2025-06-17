@@ -15,13 +15,16 @@ import { loadAppSettings, loadSleepHistory, loadSleepSettings } from '../utils/s
 import { calculateSleepTimes } from '../utils/sleepCalculator';
 import { colors, getGlobalStyles } from '../styles/theme';
 import { SleepHistoryEntry, SleepSettings } from '../types';
+import SleepReviewScreen from './SleepReviewScreen';
+
 
 const HomeScreen: React.FC = () => {
   const navigation = useNavigation();
   const colorScheme = useColorScheme();
   const [appSettings, setAppSettings] = useState<any>(null);
   const [lastSettings, setLastSettings] = useState<SleepSettings | null>(null);
-  const [recentHistory, setRecentHistory] = useState<SleepHistoryEntry[]>([]);
+  const [pendingReview, setPendingReview] = useState<SleepHistoryEntry | null>(null);
+
   
   // Use app settings for dark mode if available, otherwise use system
   const isDarkMode = appSettings?.theme === 'system'
@@ -42,7 +45,10 @@ const HomeScreen: React.FC = () => {
 
       const history = await loadSleepHistory();
       if (history && history.length > 0) {
-        setRecentHistory(history.slice(0, 3)); // Get most recent 3 entries
+        const latest = history[0];
+        if (!latest.quality && new Date() > latest.wakeUpTime) {
+          setPendingReview(latest);
+        }
       }
     };
 
@@ -170,6 +176,12 @@ const HomeScreen: React.FC = () => {
           </TouchableOpacity>
         </View>
       </ScrollView>
+      <SleepReviewScreen
+        visible={pendingReview !== null}
+        entry={pendingReview}
+        onClose={() => setPendingReview(null)}
+        isDarkMode={isDarkMode}
+      />
     </SafeAreaView>
   );
 };

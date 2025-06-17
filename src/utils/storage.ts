@@ -79,6 +79,7 @@ export const loadThemeMode = async (): Promise<ThemeMode | null> => {
  */
 export const saveSleepHistoryEntry = async (
     settings: SleepSettings,
+    extras?: { quality?: number; technique?: string },
 ): Promise<void> => {
     try {
         // Get existing history
@@ -89,6 +90,8 @@ export const saveSleepHistoryEntry = async (
             ...settings,
             id: Date.now().toString(),
             createdAt: new Date(),
+            quality: extras?.quality,
+            technique: extras?.technique,
         };
 
         // Add to history
@@ -124,6 +127,8 @@ export const loadSleepHistory = async (): Promise<
                 createdAt: new Date(entry.createdAt),
                 ...(entry.watchStart ? { watchStart: new Date(entry.watchStart) } : {}),
                 ...(entry.watchEnd ? { watchEnd: new Date(entry.watchEnd) } : {}),
+                quality: entry.quality,
+                technique: entry.technique,
             }));
         }
         return [];
@@ -205,6 +210,8 @@ export const loadAppSettings = async (): Promise<AppSettings | null> => {
             defaultSleepDuration: 8,
             defaultWindDownPeriod: 30,
             enableWatchTracking: false,
+            lockdownMode: false,
+            windDownReminderTime: null,
         };
     } catch (error) {
         console.error('Error loading app settings:', error);

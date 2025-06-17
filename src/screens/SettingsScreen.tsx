@@ -15,6 +15,8 @@ import { AppSettings, WindDownOption } from '../types';
 import { colors, getGlobalStyles } from '../styles/theme';
 import { loadAppSettings, saveAppSettings } from '../utils/storage';
 import WindDownSelector from '../components/WindDownSelector';
+import TimePicker from '../components/TimePicker';
+import { scheduleDailyWindDownReminder } from '../utils/notifications';
 
 const SettingsScreen: React.FC = () => {
   const deviceColorScheme = useColorScheme();
@@ -25,6 +27,8 @@ const SettingsScreen: React.FC = () => {
     defaultSleepDuration: 8,
     defaultWindDownPeriod: 30,
     enableWatchTracking: false,
+    lockdownMode: false,
+    windDownReminderTime: null,
   });
 
   // Use app settings for dark mode if available, otherwise use system
@@ -41,6 +45,9 @@ const SettingsScreen: React.FC = () => {
       const savedSettings = await loadAppSettings();
       if (savedSettings) {
         setSettings(savedSettings);
+        if (savedSettings.windDownReminderTime) {
+          scheduleDailyWindDownReminder(savedSettings.windDownReminderTime);
+        }
       }
     };
 
@@ -52,6 +59,9 @@ const SettingsScreen: React.FC = () => {
     const newSettings = { ...settings, ...updates };
     setSettings(newSettings);
     saveAppSettings(newSettings);
+    if (updates.windDownReminderTime) {
+      scheduleDailyWindDownReminder(updates.windDownReminderTime);
+    }
   };
 
   // Format sleep duration display
@@ -64,6 +74,19 @@ const SettingsScreen: React.FC = () => {
     } else {
       return `${wholeHours} hours ${minutes} min`;
     }
+  };
+
+  const parseTime = (timeStr: string): Date => {
+    const [h, m] = timeStr.split(':').map(Number);
+    const d = new Date();
+    d.setHours(h, m, 0, 0);
+    return d;
+  };
+
+  const toTimeString = (date: Date): string => {
+    const h = String(date.getHours()).padStart(2, '0');
+    const m = String(date.getMinutes()).padStart(2, '0');
+    return `${h}:${m}`;
   };
 
   // Wind-down period options
@@ -190,16 +213,42 @@ const SettingsScreen: React.FC = () => {
             />
           </View>
 
-          <View style={{ marginTop: 20 }}>
-            <Text style={styles.text}>Default Wind-down Period</Text>
-            <WindDownSelector
-              options={windDownOptions}
-              selectedOption={settings.defaultWindDownPeriod}
-              onSelect={(value) => updateSettings({ defaultWindDownPeriod: value })}
-              isDarkMode={isDarkMode}
-            />
-          </View>
+        <View style={{ marginTop: 20 }}>
+          <Text style={styles.text}>Default Wind-down Period</Text>
+          <WindDownSelector
+            options={windDownOptions}
+            selectedOption={settings.defaultWindDownPeriod}
+            onSelect={(value) => updateSettings({ defaultWindDownPeriod: value })}
+            isDarkMode={isDarkMode}
+          />
         </View>
+      </View>
+
+      {/* Notifications */}
+      <View style={styles.card}>
+        <Text style={styles.subHeader}>Wind-down Notifications</Text>
+
+        <View style={localStyles.settingRow}>
+          <Text style={styles.text}>Lockdown Mode</Text>
+          <Switch
+            value={settings.lockdownMode}
+            onValueChange={(value) => updateSettings({ lockdownMode: value })}
+            trackColor={{ false: theme.border, true: theme.primary }}
+            thumbColor={theme.card}
+          />
+        </View>
+
+        <TimePicker
+          label="Reminder Time"
+          value={parseTime(settings.windDownReminderTime || '21:00')}
+          onChange={(date) =>
+            updateSettings({ windDownReminderTime: toTimeString(date) })
+          }
+          isDarkMode={isDarkMode}
+          use24HourFormat={true}
+        />
+        <Text style={[styles.caption, { marginTop: 4 }]}>Daily reminder to start winding down</Text>
+      </View>
 
         {/* About */}
         <View style={styles.card}>

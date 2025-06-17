@@ -14,6 +14,10 @@ export interface SleepHistoryEntry extends SleepSettings {
   watchStart?: Date;
   watchEnd?: Date;
   watchQuality?: number;
+  /** Rating from 1 (poor) to 5 (great) */
+  quality?: number;
+  /** Meditation or wind-down technique used */
+  technique?: string;
 }
 
 export type ThemeMode = 'light' | 'dark';
@@ -24,6 +28,7 @@ export type RootStackParamList = {
   SleepCalculator: undefined;
   History: undefined;
   Settings: undefined;
+  WindDown: undefined;
 };
 
 export interface AppSettings {
@@ -34,4 +39,6 @@ export interface AppSettings {
   defaultWindDownPeriod: WindDownOption;
   /** When enabled, sleep data is imported from Apple Watch */
   enableWatchTracking: boolean;
+  lockdownMode: boolean;
+  windDownReminderTime: string | null;
 }

@@ -15,13 +15,6 @@ import SettingsScreen from '../screens/SettingsScreen';
 // Tab navigator
 const Tab = createBottomTabNavigator<RootStackParamList>();
 
-// Define mapping of route names to icons (outside of component)
-const routeIcons: Record<string, { active: string; inactive: string }> = {
-  Home: { active: 'home', inactive: 'home-outline' },
-  SleepCalculator: { active: 'calculator', inactive: 'calculator-outline' },
-  History: { active: 'time', inactive: 'time-outline' },
-  Settings: { active: 'settings', inactive: 'settings-outline' },
-};
 
 interface NavigationProps {
   isDarkMode: boolean;
