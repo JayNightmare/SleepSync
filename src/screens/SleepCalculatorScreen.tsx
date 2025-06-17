@@ -18,6 +18,7 @@ import { SleepSettings, WindDownOption } from '../types';
 
 import TimePicker from '../components/TimePicker';
 import WindDownSelector from '../components/WindDownSelector';
+import WindDownSuggestion from '../components/WindDownSuggestion';
 import ResultCard from '../components/ResultCard';
 
 const SleepCalculatorScreen: React.FC = () => {
@@ -195,6 +196,8 @@ const SleepCalculatorScreen: React.FC = () => {
                         isDarkMode={isDarkMode}
                     />
                 </View>
+
+                <WindDownSuggestion isDarkMode={isDarkMode} />
 
                 <ResultCard
                     bedtime={bedtime}
