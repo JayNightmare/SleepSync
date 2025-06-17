@@ -33,7 +33,7 @@ export const fetchSleepSamples = async (startDate: Date, endDate: Date = new Dat
       endDate: endDate.toISOString(),
     } as HealthInputOptions;
 
-    AppleHealthKit.getSleepSamples(options, (err: string, results: Array<any>) => {
+    AppleHealthKit.getSleepSamples(options, (err: string, results: HealthValue[]) => {
       if (err) {
         console.error('Error fetching sleep samples:', err);
         reject(err);
