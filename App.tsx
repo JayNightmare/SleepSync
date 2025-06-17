@@ -13,6 +13,7 @@ import { useColorScheme } from 'react-native';
 import { loadAppSettings } from './src/utils/storage';
 import AppNavigator from './src/navigation/AppNavigator';
 import { registerIcons } from './src/utils/iconSetup';
+import { initNotifications } from './src/utils/notifications';
 
 function App() {
   const colorScheme = useColorScheme();
@@ -21,6 +22,7 @@ function App() {
   useEffect(() => {
     // Initialize icons
     registerIcons();
+    initNotifications();
     
     // Load saved theme preference
     const loadTheme = async () => {
