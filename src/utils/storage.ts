@@ -125,6 +125,8 @@ export const loadSleepHistory = async (): Promise<
                 ...entry,
                 wakeUpTime: new Date(entry.wakeUpTime),
                 createdAt: new Date(entry.createdAt),
+                ...(entry.watchStart ? { watchStart: new Date(entry.watchStart) } : {}),
+                ...(entry.watchEnd ? { watchEnd: new Date(entry.watchEnd) } : {}),
                 quality: entry.quality,
                 technique: entry.technique,
             }));
@@ -207,6 +209,7 @@ export const loadAppSettings = async (): Promise<AppSettings | null> => {
             optimizeSleepCycles: false,
             defaultSleepDuration: 8,
             defaultWindDownPeriod: 30,
+            enableWatchTracking: false,
             lockdownMode: false,
             windDownReminderTime: null,
         };

@@ -10,6 +10,10 @@ export interface SleepHistoryEntry extends SleepSettings {
   id: string;
   createdAt: Date;
   title?: string;
+  /** Optional data imported from Apple Watch */
+  watchStart?: Date;
+  watchEnd?: Date;
+  watchQuality?: number;
   /** Rating from 1 (poor) to 5 (great) */
   quality?: number;
   /** Meditation or wind-down technique used */
@@ -33,6 +37,8 @@ export interface AppSettings {
   optimizeSleepCycles: boolean;
   defaultSleepDuration: number;
   defaultWindDownPeriod: WindDownOption;
+  /** When enabled, sleep data is imported from Apple Watch */
+  enableWatchTracking: boolean;
   lockdownMode: boolean;
   windDownReminderTime: string | null;
 }
