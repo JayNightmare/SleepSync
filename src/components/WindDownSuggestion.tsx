@@ -34,7 +34,11 @@ const WindDownSuggestion: React.FC<WindDownSuggestionProps> = ({
       <Text style={[styles.title, { color: theme.text }]}>Wind-down suggestion</Text>
       <Text style={[styles.suggestion, { color: theme.primary }]}>{suggestions[index]}</Text>
       {suggestions.length > 1 && (
-        <TouchableOpacity style={[styles.button, { backgroundColor: theme.accent }]} onPress={next}>
+        <TouchableOpacity
+          style={[styles.button, { backgroundColor: theme.accent }]}
+          onPress={next}
+          accessibilityLabel="Next wind-down tip"
+        >
           <Text style={styles.buttonText}>Another Tip</Text>
         </TouchableOpacity>
       )}
