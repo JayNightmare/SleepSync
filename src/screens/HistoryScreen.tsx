@@ -51,11 +51,20 @@ const HistoryScreen: React.FC = () => {
         if (granted) {
           const start = new Date();
           start.setDate(start.getDate() - 7);
-          await fetchSleepSamples(start);
+          const watchData = await fetchSleepSamples(start);
+          if (watchData && Array.isArray(watchData)) {
+            const mergedHistory = [...savedHistory, ...watchData];
+            setHistory(mergedHistory);
+          } else {
+            setHistory(savedHistory); // Fallback to saved history if watch data is invalid
+          }
         }
       } catch (err) {
         console.error('Failed to load watch data:', err);
+        setHistory(savedHistory); // Fallback to saved history in case of error
       }
+    } else {
+      setHistory(savedHistory); // Fallback to saved history if watch tracking is disabled
     }
     setIsLoading(false);
     setRefreshing(false);
