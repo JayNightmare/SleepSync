@@ -13,6 +13,8 @@ import Slider from '@react-native-community/slider';
 
 import { calculateSleepTimes } from '../utils/sleepCalculator';
 import { loadSleepSettings, saveSleepSettings, saveAppSettings, loadAppSettings, saveSleepHistoryEntry } from '../utils/storage';
+import { scheduleWindDownNotification } from '../utils/notifications';
+import { setAppBlocking } from '../utils/screenTime';
 import { getGlobalStyles, colors } from '../styles/theme';
 import { SleepSettings, WindDownOption } from '../types';
 
@@ -120,6 +122,12 @@ const SleepCalculatorScreen: React.FC = () => {
         };
 
         await saveSleepHistoryEntry(settings);
+
+        scheduleWindDownNotification(windDownTime);
+
+        if (appSettings?.lockdownMode) {
+            setAppBlocking([], windDownTime, bedtime);
+        }
 
         // Show confirmation and offer to view history
         Alert.alert(

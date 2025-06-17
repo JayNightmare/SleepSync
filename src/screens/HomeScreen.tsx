@@ -14,14 +14,13 @@ import Ionicons from '@react-native-vector-icons/ionicons';
 import { loadAppSettings, loadSleepHistory, loadSleepSettings } from '../utils/storage';
 import { calculateSleepTimes } from '../utils/sleepCalculator';
 import { colors, getGlobalStyles } from '../styles/theme';
-import { SleepHistoryEntry, SleepSettings } from '../types';
+import { SleepSettings } from '../types';
 
 const HomeScreen: React.FC = () => {
   const navigation = useNavigation();
   const colorScheme = useColorScheme();
   const [appSettings, setAppSettings] = useState<any>(null);
   const [lastSettings, setLastSettings] = useState<SleepSettings | null>(null);
-  const [recentHistory, setRecentHistory] = useState<SleepHistoryEntry[]>([]);
   
   // Use app settings for dark mode if available, otherwise use system
   const isDarkMode = appSettings?.theme === 'system'

@@ -202,6 +202,8 @@ export const loadAppSettings = async (): Promise<AppSettings | null> => {
             optimizeSleepCycles: false,
             defaultSleepDuration: 8,
             defaultWindDownPeriod: 30,
+            lockdownMode: false,
+            windDownReminderTime: null,
         };
     } catch (error) {
         console.error('Error loading app settings:', error);
