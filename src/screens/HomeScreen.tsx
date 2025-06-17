@@ -17,12 +17,14 @@ import { colors, getGlobalStyles } from '../styles/theme';
 import { SleepHistoryEntry, SleepSettings } from '../types';
 import SleepReviewScreen from './SleepReviewScreen';
 
+
 const HomeScreen: React.FC = () => {
   const navigation = useNavigation();
   const colorScheme = useColorScheme();
   const [appSettings, setAppSettings] = useState<any>(null);
   const [lastSettings, setLastSettings] = useState<SleepSettings | null>(null);
   const [pendingReview, setPendingReview] = useState<SleepHistoryEntry | null>(null);
+
   
   // Use app settings for dark mode if available, otherwise use system
   const isDarkMode = appSettings?.theme === 'system'

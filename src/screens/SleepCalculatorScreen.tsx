@@ -13,11 +13,14 @@ import Slider from '@react-native-community/slider';
 
 import { calculateSleepTimes } from '../utils/sleepCalculator';
 import { loadSleepSettings, saveSleepSettings, saveAppSettings, loadAppSettings, saveSleepHistoryEntry } from '../utils/storage';
+import { scheduleWindDownNotification } from '../utils/notifications';
+import { setAppBlocking } from '../utils/screenTime';
 import { getGlobalStyles, colors } from '../styles/theme';
 import { SleepSettings, WindDownOption } from '../types';
 
 import TimePicker from '../components/TimePicker';
 import WindDownSelector from '../components/WindDownSelector';
+import WindDownSuggestion from '../components/WindDownSuggestion';
 import ResultCard from '../components/ResultCard';
 
 const SleepCalculatorScreen: React.FC = () => {
@@ -121,6 +124,12 @@ const SleepCalculatorScreen: React.FC = () => {
 
         await saveSleepHistoryEntry(settings);
 
+        scheduleWindDownNotification(windDownTime);
+
+        if (appSettings?.lockdownMode) {
+            setAppBlocking([], windDownTime, bedtime);
+        }
+
         // Show confirmation and offer to view history
         Alert.alert(
             'Success', 
@@ -195,6 +204,8 @@ const SleepCalculatorScreen: React.FC = () => {
                         isDarkMode={isDarkMode}
                     />
                 </View>
+
+                <WindDownSuggestion isDarkMode={isDarkMode} />
 
                 <ResultCard
                     bedtime={bedtime}

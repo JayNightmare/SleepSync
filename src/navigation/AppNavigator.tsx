@@ -1,6 +1,7 @@
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { navigationRef } from './RootNavigation';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 import { RootStackParamList } from '../types';
@@ -9,6 +10,7 @@ import HomeScreen from '../screens/HomeScreen';
 import SleepCalculatorScreen from '../screens/SleepCalculatorScreen';
 import HistoryScreen from '../screens/HistoryScreen';
 import SettingsScreen from '../screens/SettingsScreen';
+import WindDownScreen from '../screens/WindDownScreen';
 
 const Tab = createBottomTabNavigator<RootStackParamList>();
 
@@ -54,7 +56,7 @@ const AppNavigator: React.FC<NavigationProps> = ({ isDarkMode }) => {
   const theme = isDarkMode ? colors.dark : colors.light;
 
   return (
-    <NavigationContainer>
+    <NavigationContainer ref={navigationRef}>
       <Tab.Navigator
         screenOptions={({ route }) => ({
           headerShown: true,
@@ -90,6 +92,14 @@ const AppNavigator: React.FC<NavigationProps> = ({ isDarkMode }) => {
           name="Settings"
           component={SettingsScreen}
           options={{ title: 'Settings' }}
+        />
+        <Tab.Screen
+          name="WindDown"
+          component={WindDownScreen}
+          options={{
+            title: 'Wind Down',
+            tabBarButton: () => null,
+          }}
         />
       </Tab.Navigator>
     </NavigationContainer>

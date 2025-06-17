@@ -24,6 +24,7 @@ export type RootStackParamList = {
   SleepCalculator: undefined;
   History: undefined;
   Settings: undefined;
+  WindDown: undefined;
 };
 
 export interface AppSettings {
@@ -32,4 +33,6 @@ export interface AppSettings {
   optimizeSleepCycles: boolean;
   defaultSleepDuration: number;
   defaultWindDownPeriod: WindDownOption;
+  lockdownMode: boolean;
+  windDownReminderTime: string | null;
 }
