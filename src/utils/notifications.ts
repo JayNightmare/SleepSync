@@ -42,6 +42,6 @@ export const scheduleDailyWindDownReminder = (timeString: string) => {
   if (date < new Date()) {
     date.setDate(date.getDate() + 1);
   }
-  PushNotification.cancelAllLocalNotifications();
+  PushNotification.cancelLocalNotifications({ channelId: 'winddown' });
   scheduleWindDownNotification(date);
 };
