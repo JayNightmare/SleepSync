@@ -10,6 +10,10 @@ export interface SleepHistoryEntry extends SleepSettings {
   id: string;
   createdAt: Date;
   title?: string;
+  /** Rating from 1 (poor) to 5 (great) */
+  quality?: number;
+  /** Meditation or wind-down technique used */
+  technique?: string;
 }
 
 export type ThemeMode = 'light' | 'dark';
