@@ -79,6 +79,7 @@ export const loadThemeMode = async (): Promise<ThemeMode | null> => {
  */
 export const saveSleepHistoryEntry = async (
     settings: SleepSettings,
+    extras?: { quality?: number; technique?: string },
 ): Promise<void> => {
     try {
         // Get existing history
@@ -89,6 +90,8 @@ export const saveSleepHistoryEntry = async (
             ...settings,
             id: Date.now().toString(),
             createdAt: new Date(),
+            quality: extras?.quality,
+            technique: extras?.technique,
         };
 
         // Add to history
@@ -122,6 +125,8 @@ export const loadSleepHistory = async (): Promise<
                 ...entry,
                 wakeUpTime: new Date(entry.wakeUpTime),
                 createdAt: new Date(entry.createdAt),
+                quality: entry.quality,
+                technique: entry.technique,
             }));
         }
         return [];
