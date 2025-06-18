@@ -1,15 +1,15 @@
-import AppleHealthKit, { HealthKitPermissions, HealthInputOptions, HealthValue } from 'react-native-health';
+import HealthKit, { HealthKitPermissions, HealthInputOptions, HealthValue } from 'react-native-health';
 
 const permissions: HealthKitPermissions = {
   permissions: {
-    read: ['SleepAnalysis'],
+    read: [HealthKit.Constants.Permissions.SleepAnalysis],
     write: [],
   },
 };
 
 export const requestHealthPermissions = async (): Promise<boolean> => {
   return new Promise(resolve => {
-    AppleHealthKit.initHealthKit(permissions, (err: string) => {
+    HealthKit.initHealthKit(permissions, (err: string) => {
       if (err) {
         console.error('HealthKit permission error:', err);
         resolve(false);
@@ -33,7 +33,7 @@ export const fetchSleepSamples = async (startDate: Date, endDate: Date = new Dat
       endDate: endDate.toISOString(),
     } as HealthInputOptions;
 
-    AppleHealthKit.getSleepSamples(options, (err: string, results: HealthValue[]) => {
+    HealthKit.getSleepSamples(options, (err: string, results: HealthValue[]) => {
       if (err) {
         console.error('Error fetching sleep samples:', err);
         reject(err);
@@ -43,7 +43,7 @@ export const fetchSleepSamples = async (startDate: Date, endDate: Date = new Dat
       const samples: SleepSample[] = results.map(sample => ({
         startDate: new Date(sample.startDate),
         endDate: new Date(sample.endDate),
-        value: sample.value,
+        value: String(sample.value),
       }));
       resolve(samples);
     });

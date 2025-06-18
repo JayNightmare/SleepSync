@@ -9,48 +9,42 @@ import { colors } from '../styles/theme';
 import HomeScreen from '../screens/HomeScreen';
 import SleepCalculatorScreen from '../screens/SleepCalculatorScreen';
 import HistoryScreen from '../screens/HistoryScreen';
-import SettingsScreen from '../screens/SettingsScreen';
+import SettingsStackNavigator from './SettingsStackNavigator';
 import WindDownScreen from '../screens/WindDownScreen';
 
 const Tab = createBottomTabNavigator<RootStackParamList>();
-
-const TabBarIcon = (props: {
-  route: keyof RootStackParamList;
-  focused: boolean;
-  color: string;
-  size: number;
-}) => {
-  const { route, focused, color, size } = props;
-  let iconName = 'help-circle';
-
-  if (route === 'Home') {
-    iconName = focused ? 'home' : 'home-outline';
-  } else if (route === 'SleepCalculator') {
-    iconName = focused ? 'calculator' : 'calculator-outline';
-  } else if (route === 'History') {
-    iconName = focused ? 'time' : 'time-outline';
-  } else if (route === 'Settings') {
-    iconName = focused ? 'settings' : 'settings-outline';
-  }
-
-  return <Ionicons name={iconName} size={size} color={color} />;
-};
 
 type NavigationProps = {
   isDarkMode: boolean;
 };
 
-const tabBarIcon = (
-  route: keyof RootStackParamList,
-  _theme: typeof colors.light | typeof colors.dark
-) => ({ focused, color, size }: { focused: boolean; color: string; size: number }) => (
-  <TabBarIcon
-    route={route}
-    focused={focused}
-    color={color}
-    size={size}
-  />
-);
+const tabBarIcon = (routeName: string, isDarkMode: boolean) =>
+  ({ focused, size }: { focused: boolean; size: number }) => {
+    let iconName: string;
+    const color = isDarkMode ? 'white' : 'black';
+
+    switch (routeName) {
+      case 'Home':
+        iconName = focused ? 'home' : 'home-outline';
+        break;
+      case 'SleepCalculator':
+        iconName = focused ? 'bed' : 'bed-outline';
+        break;
+      case 'History':
+        iconName = focused ? 'time' : 'time-outline';
+        break;
+      case 'Settings':
+        iconName = focused ? 'settings' : 'settings-outline';
+        break;
+      case 'WindDown':
+        iconName = focused ? 'moon' : 'moon-outline';
+        break;
+      default:
+        iconName = 'help-circle-outline';
+    }
+
+    return <Ionicons name={iconName} size={size} color={color} />;
+  };
 
 const AppNavigator: React.FC<NavigationProps> = ({ isDarkMode }) => {
   const theme = isDarkMode ? colors.dark : colors.light;
@@ -59,14 +53,14 @@ const AppNavigator: React.FC<NavigationProps> = ({ isDarkMode }) => {
     <NavigationContainer ref={navigationRef}>
       <Tab.Navigator
         screenOptions={({ route }) => ({
-          headerShown: true,
+          headerShown: false,
           tabBarActiveTintColor: theme.primary,
           tabBarInactiveTintColor: theme.subText,
           tabBarStyle: {
             backgroundColor: theme.card,
             borderTopColor: theme.border,
           },
-          tabBarIcon: tabBarIcon(route.name as keyof RootStackParamList, theme),
+          tabBarIcon: tabBarIcon(route.name, isDarkMode),
           headerStyle: {
             backgroundColor: theme.card,
           },
@@ -90,7 +84,7 @@ const AppNavigator: React.FC<NavigationProps> = ({ isDarkMode }) => {
         />
         <Tab.Screen
           name="Settings"
-          component={SettingsScreen}
+          component={SettingsStackNavigator}
           options={{ title: 'Settings' }}
         />
         <Tab.Screen

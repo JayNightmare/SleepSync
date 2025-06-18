@@ -31,6 +31,14 @@ export type RootStackParamList = {
   WindDown: undefined;
 };
 
+export type SettingsStackParamList = {
+  SettingsMain: undefined;
+  GeneralSettings: undefined;
+  DefaultSettings: undefined;
+  NotificationsSettings: undefined;
+  AboutSettings: undefined;
+};
+
 export interface AppSettings {
   use24HourFormat: boolean;
   theme: ThemeMode | 'system';

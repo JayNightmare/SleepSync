@@ -48,5 +48,11 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+
+	<!-- ! Apple Watch Health Kit ! -->
+	<key>NSHealthShareUsageDescription</key>
+	<string>SleepSync needs access to your sleep data to track your sleep patterns and provide better recommendations.</string>
+	<key>NSHealthUpdateUsageDescription</key>
+	<string>SleepSync needs access to update your sleep data for accurate tracking.</string>
 </dict>
 </plist>

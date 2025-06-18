@@ -7,6 +7,7 @@ import {
     TouchableOpacity,
     useColorScheme,
     Alert,
+    StyleSheet,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import Slider from '@react-native-community/slider';
@@ -132,12 +133,12 @@ const SleepCalculatorScreen: React.FC = () => {
 
         // Show confirmation and offer to view history
         Alert.alert(
-            'Success', 
-            'Saved to history!', 
+            'Success',
+            'Saved to history!',
             [
                 { text: 'OK', style: 'default' },
-                { 
-                    text: 'View History', 
+                {
+                    text: 'View History',
                     onPress: () => navigation.navigate('History' as never),
                     style: 'default'
                 }
@@ -147,6 +148,9 @@ const SleepCalculatorScreen: React.FC = () => {
 
     return (
         <SafeAreaView style={[styles.container]}>
+            <View style={localStyles.headerContainer}>
+                <Text style={styles.header}>Sleep Calculator</Text>
+            </View>
             <ScrollView contentInsetAdjustmentBehavior="automatic" style={styles.scrollViewFull}>
                 <View style={styles.card}>
                     <Text style={styles.header}>What time do you want to wake up?</Text>
@@ -224,5 +228,84 @@ const SleepCalculatorScreen: React.FC = () => {
         </SafeAreaView>
     );
 };
+
+const localStyles = StyleSheet.create({
+    scrollView: {
+        flex: 1,
+        padding: 16,
+    },
+    headerContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        paddingHorizontal: 16,
+        paddingTop: 8,
+        paddingBottom: 4,
+    },
+    refreshButton: {
+        padding: 8,
+    },
+    historyHeader: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginBottom: 12,
+    },
+    detailsRow: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        marginBottom: 16,
+    },
+    detail: {
+        flex: 1,
+    },
+    deleteButton: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        alignSelf: 'flex-end',
+        padding: 8,
+    },
+    editButton: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        padding: 8,
+    },
+    actionsRow: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+    },
+    editText: {
+        marginLeft: 4,
+        color: '#3949AB',
+    },
+    reviewRow: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        marginBottom: 8,
+    },
+    emptyState: {
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: 32,
+        marginTop: 32,
+    },
+    loadingContainer: {
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: 32,
+        marginTop: 32,
+    },
+    emptyText: {
+        marginTop: 16,
+        marginBottom: 8,
+    },
+    centerText: {
+        textAlign: 'center',
+    },
+    deleteText: {
+        marginLeft: 4,
+        color: '#DC3545', // Using delete color directly since we can't directly access theme here
+    }
+});
 
 export default SleepCalculatorScreen;

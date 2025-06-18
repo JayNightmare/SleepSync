@@ -10,6 +10,7 @@ import {
   Alert,
   RefreshControl,
   ActivityIndicator,
+  Platform,
 } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -17,7 +18,8 @@ import { deleteHistoryEntry, loadAppSettings, loadSleepHistory } from '../utils/
 import { SleepHistoryEntry } from '../types';
 import { colors, getGlobalStyles } from '../styles/theme';
 import { formatTime } from '../utils/sleepCalculator';
-import { requestHealthPermissions, fetchSleepSamples } from '../utils/appleHealth';
+import { requestHealthPermissions as requestApplePermissions, fetchSleepSamples as fetchAppleSleepSamples } from '../utils/appleHealth';
+import { requestHealthPermissions as requestAndroidPermissions, fetchSleepSamples as fetchAndroidSleepSamples } from '../utils/androidHealth';
 import SleepReviewScreen from './SleepReviewScreen';
 
 const HistoryScreen: React.FC = () => {
@@ -42,24 +44,49 @@ const HistoryScreen: React.FC = () => {
     const settings = await loadAppSettings();
     setAppSettings(settings);
 
-    const savedHistory = await loadSleepHistory();
-    if (savedHistory) {
-      setHistory(savedHistory);
-    }
+    const savedHistory = (await loadSleepHistory()) ?? [];
+    if (savedHistory) setHistory(savedHistory);
 
     if (settings?.enableWatchTracking) {
       try {
-        const granted = await requestHealthPermissions();
-        if (granted) {
-          const start = new Date();
-          start.setDate(start.getDate() - 7);
-          const watchData = await fetchSleepSamples(start);
-          if (watchData && Array.isArray(watchData)) {
-            const mergedHistory = [...savedHistory, ...watchData];
-            setHistory(mergedHistory);
-          } else {
-            setHistory(savedHistory); // Fallback to saved history if watch data is invalid
+        let granted = false;
+        let watchData = null;
+        const start = new Date();
+        start.setDate(start.getDate() - 7);
+
+        if (Platform.OS === 'ios') {
+          granted = await requestApplePermissions();
+          if (granted) {
+            watchData = await fetchAppleSleepSamples(start);
           }
+        } else {
+          granted = await requestAndroidPermissions();
+          if (granted) {
+            watchData = await fetchAndroidSleepSamples(start);
+          }
+        }
+
+        if (watchData && Array.isArray(watchData)) {
+          const mappedWatchData: SleepHistoryEntry[] = watchData.map((sample, index) => {
+            const sleepDurationHours =
+              (sample.endDate.getTime() - sample.startDate.getTime()) / 1000 / 60 / 60;
+
+            return {
+              id: `watch-${sample.startDate.getTime()}-${index}`,
+              createdAt: sample.endDate,
+              wakeUpTime: sample.endDate,
+              sleepDuration: Math.round(sleepDurationHours * 4) / 4,
+              windDownPeriod: 15,
+              watchStart: sample.startDate,
+              watchEnd: sample.endDate,
+              watchQuality: parseInt(sample.value, 10) || undefined,
+            };
+          });
+
+          const mergedHistory: SleepHistoryEntry[] = [...(savedHistory ?? []), ...mappedWatchData];
+          setHistory(mergedHistory);
+        } else {
+          setHistory(savedHistory ?? []);
         }
       } catch (err) {
         console.error('Failed to load watch data:', err);
@@ -168,9 +195,9 @@ const HistoryScreen: React.FC = () => {
           onPress={onRefresh}
           disabled={isLoading || refreshing}
         >
-          <Ionicons 
-            name="refresh" 
-            size={24} 
+          <Ionicons
+            name="refresh"
+            size={24}
             color={theme.primary}
             style={isLoading || refreshing ? styles.dimmed : undefined}
           />
@@ -255,7 +282,7 @@ const HistoryScreen: React.FC = () => {
                 style={localStyles.deleteButton}
                 onPress={() => confirmDelete(entry)}
               >
-                <Ionicons name="trash-outline" size={20} color={theme.danger} />
+                <Ionicons name="trash" size={20} color={theme.danger} />
                 <Text style={localStyles.deleteText}>Delete</Text>
               </TouchableOpacity>
             </View>
