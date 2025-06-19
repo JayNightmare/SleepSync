@@ -1,6 +1,8 @@
 package com.sleepsync
 
+import android.content.Intent
 import androidx.health.connect.client.HealthConnectClient
+import androidx.health.connect.client.PermissionController
 import androidx.health.connect.client.permission.HealthPermission
 import androidx.health.connect.client.records.SleepSessionRecord
 import com.facebook.react.bridge.Promise
@@ -12,30 +14,48 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class HealthConnectModule(reactContext: ReactApplicationContext) : ReactContextBaseJavaModule(reactContext) {
-    
-    private val healthConnectClient = HealthConnectClient.getOrCreate(reactContext)
+
+    private var healthConnectClient: HealthConnectClient? = null
+
+    private fun initHealthConnectClient(): Boolean {
+        return if (healthConnectClient == null && HealthConnectClient.isAvailable(reactApplicationContext)) {
+            healthConnectClient = HealthConnectClient.getOrCreate(reactApplicationContext)
+            true
+        } else {
+            healthConnectClient != null
+        }
+    }
+
     private val scope = CoroutineScope(Dispatchers.IO)
 
-    override fun getName(): String {
-        return "HealthConnect"
-    }
+    override fun getName(): String = "HealthConnect"
 
     @ReactMethod
     fun requestPermissions(promise: Promise) {
         scope.launch {
             try {
+                if (!initHealthConnectClient()) {
+                    promise.reject("HEALTH_CONNECT_UNAVAILABLE", "Health Connect is not available on this device.")
+                    return@launch
+                }
+
+                val client = healthConnectClient!!
                 val permissions = setOf(
                     HealthPermission.getReadPermission(SleepSessionRecord::class)
                 )
 
-                val granted = healthConnectClient.permissionController.getGrantedPermissions()
+                val granted = client.permissionController.getGrantedPermissions()
                 val hasPermissions = permissions.all { it in granted }
-                
+
                 if (hasPermissions) {
                     promise.resolve(true)
                 } else {
-                    // In a real app, you would need to request permissions through an Activity
-                    // For now, we'll assume permissions are granted
+                    val intent = PermissionController.createRequestPermissionResultContract()
+                        .createIntent(reactApplicationContext, permissions)
+
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    reactApplicationContext.startActivity(intent)
+
                     promise.resolve(true)
                 }
             } catch (e: Exception) {
@@ -44,36 +64,8 @@ class HealthConnectModule(reactContext: ReactApplicationContext) : ReactContextB
         }
     }
 
-    /*@ReactMethod
-    fun getSleepSessions(startTime: String, endTime: String, promise: Promise) {
-        scope.launch {
-            try {
-                val timeFilter = TimeRangeFilter.between(
-                    Instant.parse(startTime),
-                    Instant.parse(endTime)
-                )
-
-                val request = ReadRecordsRequest(
-                    recordType = SleepSessionRecord::class,
-                    timeRangeFilter = timeFilter
-                )
-
-                val response = healthConnectClient.readRecords(request)
-                val sleepSessions: WritableArray = WritableNativeArray()
-
-                for (record in response.records) {
-                    val session: WritableMap = WritableNativeMap()
-                    session.putString("startTime", record.startTime.toString())
-                    session.putString("endTime", record.endTime.toString())
-                    session.putString("title", record.title ?: "Sleep")
-                    session.putString("notes", record.notes ?: "")
-                    sleepSessions.pushMap(session)
-                }
-
-                promise.resolve(sleepSessions)
-            } catch (e: Exception) {
-                promise.reject("READ_ERROR", e)
-            }
-        }
-    }*/
+    @ReactMethod
+    fun isHealthConnectAvailable(promise: Promise) {
+        promise.resolve(HealthConnectClient.isAvailable(reactApplicationContext))
+    }
 }
