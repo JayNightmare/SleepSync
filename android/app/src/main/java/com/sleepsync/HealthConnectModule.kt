@@ -17,15 +17,6 @@ class HealthConnectModule(reactContext: ReactApplicationContext) : ReactContextB
 
     private var healthConnectClient: HealthConnectClient? = null
 
-    private fun initHealthConnectClient(): Boolean {
-        return if (healthConnectClient == null && HealthConnectClient.isAvailable(reactApplicationContext)) {
-            healthConnectClient = HealthConnectClient.getOrCreate(reactApplicationContext)
-            true
-        } else {
-            healthConnectClient != null
-        }
-    }
-
     private val scope = CoroutineScope(Dispatchers.IO)
 
     override fun getName(): String = "HealthConnect"
@@ -34,10 +25,14 @@ class HealthConnectModule(reactContext: ReactApplicationContext) : ReactContextB
     fun requestPermissions(promise: Promise) {
         scope.launch {
             try {
-                if (!initHealthConnectClient()) {
+                val isAvailable = HealthConnectClient.isAvailable(reactApplicationContext)
+
+                if (!isAvailable) {
                     promise.reject("HEALTH_CONNECT_UNAVAILABLE", "Health Connect is not available on this device.")
                     return@launch
                 }
+
+                healthConnectClient = HealthConnectClient.getOrCreate(reactApplicationContext)
 
                 val client = healthConnectClient!!
                 val permissions = setOf(
@@ -62,10 +57,5 @@ class HealthConnectModule(reactContext: ReactApplicationContext) : ReactContextB
                 promise.reject("PERMISSION_ERROR", e)
             }
         }
-    }
-
-    @ReactMethod
-    fun isHealthConnectAvailable(promise: Promise) {
-        promise.resolve(HealthConnectClient.isAvailable(reactApplicationContext))
     }
 }

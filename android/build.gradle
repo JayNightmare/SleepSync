@@ -1,10 +1,12 @@
 buildscript {
     ext {
-        buildToolsVersion = "36.0.0"
+//        buildToolsVersion = "34.0.0"
         minSdkVersion = 26
+        minSdk = 26
         compileSdkVersion = 36
         targetSdkVersion = 36
-        ndkVersion = "27.1.12297006"
+        targetSdk = 36
+//        ndkVersion = "27.1.12297006"
         kotlinVersion = "2.1.20"
     }
     repositories {
@@ -12,14 +14,14 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath("com.android.tools.build:gradle")
+        classpath("com.android.tools.build:gradle:8.4.1")
         classpath("com.facebook.react:react-native-gradle-plugin")
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin")
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${kotlinVersion}")
     }
-    configurations.all {
+    configurations.configureEach {
         resolutionStrategy.eachDependency { details ->
             if (details.requested.group == 'com.android.support') {
-                details.useVersion '28.0.0'
+                details.useVersion '26.0.0'
             }
         }
     }
